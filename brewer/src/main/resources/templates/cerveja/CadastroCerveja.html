@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="pt" xmlns="http://www.w3.org/1999/xhtml" 
+<html lang="pt-BR" xmlns="http://www.w3.org/1999/xhtml" 
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorator="'layout/LayoutPadrao'">
 	
-<head></head>
+<head>
+    <meta charset='utf-8'>
+</head>
 
 <body>
 <section layout:fragment="conteudo">
@@ -69,7 +71,7 @@
 				</div>
 				
 				<div class="col-sm-3  form-group">
-					<label for="teorAlcoolico">Teor alcoólico</label>
+					<label for="teorAlcoolico">Teor alcoolico</label>
 					<div class="input-group">
 						<input id="teorAlcoolico" type="text" class="form-control  js-decimal"/>
 						<div class="input-group-addon">%</div>
