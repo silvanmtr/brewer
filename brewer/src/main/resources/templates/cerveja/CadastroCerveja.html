@@ -2,12 +2,13 @@
 <html lang="pt-BR" xmlns="http://www.w3.org/1999/xhtml" 
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:brewer="http://brewer.algaworks.com"
 	layout:decorator="'layout/LayoutPadrao'">
 	
 <head>
 	<title>Cadastro de cerveja</title>
 	<meta charset='ISO-8859-1'> 
-	
+	<link rel="stylesheet" th:href="@{/stylesheets/vendors/upload.min.css}"/>
 </head>
 
 <body>
@@ -23,13 +24,13 @@
 
 	<div class="container-fluid">
 
-		<th:block th:include="fragments/MensagemSucesso"></th:block>
 
 		<form method="POST" th:object="${cerveja}" class="form-vertical  js-form-loading">
-			<th:block th:include="fragments/MensagensErroValidacao"></th:block>
-	
+			
+			<brewer:message/>
+				
 			<div class="row">
-				<div class="col-sm-2  form-group" th:classappend="${#fields.hasErrors('sku')} ? has-error">
+				<div class="col-sm-2  form-group" brewer:classforerror="sku">
 					<label for="sku" class="control-label">SKU</label>
 					<input id="sku" type="text" class="form-control" th:field="*{sku}" />
 				</div>
