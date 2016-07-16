@@ -20,17 +20,18 @@ import br.com.brewer.repository.Estilos;
 import br.com.brewer.service.CadastroCervejaService;
 
 @Controller
+@RequestMapping("/cervejas")
 public class CervejasController {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(CervejasController.class);
 
 	@Autowired
-	private CadastroCervejaService cadastroCervejaService; 
-	
+	private CadastroCervejaService cadastroCervejaService;
+
 	@Autowired
 	private Estilos estilos;
-	
-	@RequestMapping("/cervejas/novo")
+
+	@RequestMapping("/novo")
 	public ModelAndView novo(Cerveja cerveja) {
 		ModelAndView mv = new ModelAndView("cerveja/CadastroCerveja");
 		mv.addObject("sabores", Sabor.values());
@@ -38,32 +39,21 @@ public class CervejasController {
 		mv.addObject("origens", Origem.values());
 		return mv;
 	}
-	
-	@RequestMapping(value = "/cervejas/novo", method = RequestMethod.POST)
-	public ModelAndView cadastrar(@Valid Cerveja cerveja, BindingResult result, Model model, RedirectAttributes attributes) {
+
+	@RequestMapping(value = "/novo", method = RequestMethod.POST)
+	public ModelAndView cadastrar(@Valid Cerveja cerveja, BindingResult result, Model model,
+			RedirectAttributes attributes) {
 		if (result.hasErrors()) {
 			return novo(cerveja);
 		}
-		
+
 		cadastroCervejaService.salvar(cerveja);
 		attributes.addFlashAttribute("mensagem", "Cerveja salva com sucesso!");
 		return new ModelAndView("redirect:/cervejas/novo");
-}
-	
-	@RequestMapping("/cervejas/cadastro")
-	public String cadastro(){
-		return "cerveja/cadastro-produto";
 	}
-	
-	@RequestMapping("/teste/cliente")
-	public String cliente(){
-		return "cliente/CadastroCliente";
-	}
-	@RequestMapping("/teste/usuario")
-	public String usuario(){
-		logger.info("Log de INFO");
-		logger.error("Log de ERROR");
-		
-		return "usuario/CadastroUsuario";
+
+	public ModelAndView pesquisar() {
+		ModelAndView mv = new ModelAndView("cerveja/PesquisaCervejas");
+		return mv;
 	}
 }
