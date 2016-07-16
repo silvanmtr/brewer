@@ -2,12 +2,14 @@ package br.com.brewer.controller;
 
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,20 +18,23 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import br.com.brewer.model.Cerveja;
 import br.com.brewer.model.Origem;
 import br.com.brewer.model.Sabor;
+import br.com.brewer.repository.Cervejas;
 import br.com.brewer.repository.Estilos;
+import br.com.brewer.repository.filter.CervejaFilter;
 import br.com.brewer.service.CadastroCervejaService;
 
 @Controller
 @RequestMapping("/cervejas")
 public class CervejasController {
 
-	private static final Logger logger = LoggerFactory.getLogger(CervejasController.class);
-
 	@Autowired
 	private CadastroCervejaService cadastroCervejaService;
 
 	@Autowired
 	private Estilos estilos;
+	
+	@Autowired
+	private Cervejas cervejas;
 
 	@RequestMapping("/novo")
 	public ModelAndView novo(Cerveja cerveja) {
@@ -51,9 +56,16 @@ public class CervejasController {
 		attributes.addFlashAttribute("mensagem", "Cerveja salva com sucesso!");
 		return new ModelAndView("redirect:/cervejas/novo");
 	}
-
-	public ModelAndView pesquisar() {
+	
+	@GetMapping
+	public ModelAndView pesquisar(CervejaFilter cervejaFilter, BindingResult result,  @PageableDefault(size = 2) Pageable pageable) {
 		ModelAndView mv = new ModelAndView("cerveja/PesquisaCervejas");
+		mv.addObject("sabores", Sabor.values());
+		mv.addObject("estilos", estilos.findAll());
+		mv.addObject("origens", Origem.values());
+		
+		Page<Cerveja> pagina = cervejas.filtrar(cervejaFilter, pageable);
+		mv.addObject("pagina", pagina);
 		return mv;
 	}
 }
