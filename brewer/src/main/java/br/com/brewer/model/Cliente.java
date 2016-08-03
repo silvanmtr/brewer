@@ -13,6 +13,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -93,6 +94,10 @@ public class Cliente implements Serializable {
 	public String getCpfOuCnpj() {
 		return cpfOuCnpj;
 	}
+	
+	public String getCpfOuCnpjSemFormatacao(){
+		return TipoPessoa.removerFormatacao(cpfOuCnpj);
+	}
 
 	public void setCpfOuCnpj(String cpfOuCnpj) {
 		this.cpfOuCnpj = cpfOuCnpj;
@@ -124,13 +129,14 @@ public class Cliente implements Serializable {
 	
 	@PrePersist
 	@PreUpdate
-	private void preInsertPreUpdate(){
+	private void prePersistPreUpdate(){
 		this.cpfOuCnpj = TipoPessoa.removerFormatacao(cpfOuCnpj);
 		this.telefone = this.telefone.replaceAll("\\([^)]*\\)|-","");
 	}
 	
-	public String getCpfOuCnpjSemFormatacao(){
-		return TipoPessoa.removerFormatacao(cpfOuCnpj);
+	@PostLoad
+	private void postLoad(){
+		this.cpfOuCnpj = this.tipoPessoa.formatar(this.cpfOuCnpj);
 	}
 
 	@Override
